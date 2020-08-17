@@ -47,6 +47,11 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <!-- Swagger -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -78,16 +83,18 @@
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>1.7.0-M1</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Mockito extention -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

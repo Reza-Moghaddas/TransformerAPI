@@ -5,6 +5,7 @@ import com.equilibrium.transformerapi.Exception.ResourceNotFoundException;
 import com.equilibrium.transformerapi.Repository.TransformerRepository;
 import com.equilibrium.transformerapi.handler.BattleHandler;
 import com.equilibrium.transformerapi.model.Transformer;
+import com.equilibrium.transformerapi.model.TransformerBattleResult;
 import com.equilibrium.transformerapi.model.TransformerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,24 +79,18 @@ public class TransformerServiceImpl implements  TransformerService{
     }
 
     @Override
-    public void battle(ArrayList<Long> idList) {
+    public TransformerBattleResult battle(ArrayList<Long> idList) {
 
-        Transformer t1 = new Transformer("Decepticon1",TransformerType.Decepticon,8,9,2,6,7,5,6,10);
-        Transformer t2 = new Transformer("Autobot1",TransformerType.Autobot,6,6,7,9,5,2,9,7);
-        Transformer t3 = new Transformer("Autobot2",TransformerType.Autobot,4,4,4,4,4,4,4,4);
-        Transformer t4 = new Transformer("Autobot3",TransformerType.Autobot,5,6,7,7,3,5,3,9);
-        Transformer t5 = new Transformer("Decepticon2",TransformerType.Decepticon,7,4,6,8,5,7,9,10);
-        Transformer t6 = new Transformer("Decepticon3",TransformerType.Decepticon,3,3,3,3,3,3,7,3);
+        int battleCount;
+        int autobotWinCount = 0;
+        int decepticonWinCount = 0;
 
-        List<Transformer> initTransformerList = new ArrayList<>();//findByIdList(idList);
-        initTransformerList.add(t1);
-        initTransformerList.add(t2);
-        initTransformerList.add(t3);
-        initTransformerList.add(t4);
-        initTransformerList.add(t5);
-        initTransformerList.add(t6);
+        List<Transformer> decepticonLosers =new ArrayList<>();
+        List<Transformer> autobotLosers =new ArrayList<>();
+        List<Transformer> initTransformerList = findByIdList(idList);
+        TransformerBattleResult battleResult = new TransformerBattleResult();
 
-
+        //Split transformers into two teams based on their types and sort each list by Rank
         List<Transformer> autobots = initTransformerList
                 .stream()
                 .filter(transformer -> transformer.getType() == TransformerType.Autobot)
@@ -107,56 +102,56 @@ public class TransformerServiceImpl implements  TransformerService{
                 .filter(transformer -> transformer.getType() == TransformerType.Decepticon)
                 .sorted(Comparator.comparingInt(Transformer::getRank))
                 .collect(Collectors.toList());
-        Integer battlecount = 0;
-        Integer autobotWinCount = 0;
-        Integer decepticonWinCount = 0;
-        ArrayList<Transformer> decepticonLosers =new ArrayList<>();
-        ArrayList<Transformer> autobotLosers =new ArrayList<>();
 
-        if(autobots.size() < decepticons.size())
-            battlecount = autobots.size();
-        else
-            battlecount = decepticons.size();
+        //Battles count would be equal to the size of the list with lower member count
+        //Except the time "End Game" Happens. In this case, the battle count is equal to the for loop counter.
+        //Loser of each battle added to a list.
+        battleCount = Math.min(autobots.size(), decepticons.size());
 
-        for(int i=0;i<battlecount;i++)
+        for(int i=0;i<battleCount;i++)
         {
             String oneOnOneResult = BattleHandler.oneOnOneBattle(autobots.get(i),decepticons.get(i));
             if(oneOnOneResult.equals("End Game")){
                 autobots.removeAll(autobots);
                 decepticons.removeAll(decepticons);
-                battlecount = i;
+                battleCount = i;
                 break;
             }
             switch(oneOnOneResult) {
                 case "Autobot Wins":
-                    //decepticons.remove(decepticons.get(i));
                     decepticonLosers.add(decepticons.get(i));
                     autobotWinCount++;
                     break;
                 case "Decepticon Wins":
-                    //autobots.remove(autobots.get(i));
                     autobotLosers.add(autobots.get(i));
                     decepticonWinCount++;
                     break;
             }
         }
 
+        // At the end of the battles, the losers will be removed from the original lists.
         autobots.removeAll(autobotLosers);
         decepticons.removeAll(decepticonLosers);
 
-        System.out.println(initTransformerList);
-        System.out.println(autobots);
-        System.out.println(decepticons);
-        System.out.println(battlecount);
-        System.out.println(autobotWinCount);
-        System.out.println(decepticonWinCount);
+        //Set up the result for API response payload
+        battleResult.setBattleCount(battleCount);
+        if (autobotWinCount > decepticonWinCount){
+            battleResult.setWinnerTeam(autobots);
+            battleResult.setLoserSurvival(decepticons);
+        }
+        else
+        {
+            battleResult.setWinnerTeam(decepticons);
+            battleResult.setLoserSurvival(autobots);
+        }
+        return battleResult;
     }
 
+    @Override
     public List<Transformer> findByIdList(ArrayList<Long> idList){
-        List<Transformer> transformers = getAllTransformer()
+        return getAllTransformer()
                 .stream()
                 .filter(transformer -> idList.contains(transformer.getId()) )
                 .collect(Collectors.toList());
-        return transformers;
     }
    }

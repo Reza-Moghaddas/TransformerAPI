@@ -2,6 +2,7 @@ package com.equilibrium.transformerapi.controller;
 
 
 import com.equilibrium.transformerapi.model.Transformer;
+import com.equilibrium.transformerapi.model.TransformerBattleResult;
 import com.equilibrium.transformerapi.service.TransformerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,13 +49,12 @@ public class TransformerController {
     @DeleteMapping("/transformers/{id}")
     public HttpStatus deleteTransformer(@PathVariable long id){
         this.transformerService.deleteTransformer(id);
-        return HttpStatus.OK;
+        return HttpStatus.ACCEPTED;
     }
 
     @ApiOperation(value = "It will run the battle game Transformer")
     @GetMapping("/transformers/battle/{idList}")
-    public HttpStatus Battle(@PathVariable ArrayList<Long> idList){
-        this.transformerService.battle(idList);
-        return HttpStatus.OK;
+    public ResponseEntity<TransformerBattleResult> Battle(@PathVariable ArrayList<Long> idList){
+        return ResponseEntity.ok().body(this.transformerService.battle(idList));
     }
 }

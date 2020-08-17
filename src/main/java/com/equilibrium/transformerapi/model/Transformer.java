@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Transformer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     @Column(name = "name")
@@ -33,6 +33,9 @@ public class Transformer {
     Integer skill;
     @Column(name = "overallRate")
     Integer overallRate;
+
+    public Transformer() {
+    }
 
     public Transformer(String name, TransformerType type, Integer strength, Integer intelligence, Integer speed,
                        Integer endurance, Integer rank, Integer courage, Integer firepower, Integer skill) {

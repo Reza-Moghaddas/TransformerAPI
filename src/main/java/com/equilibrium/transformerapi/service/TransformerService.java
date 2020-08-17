@@ -1,6 +1,7 @@
 package com.equilibrium.transformerapi.service;
 
 import com.equilibrium.transformerapi.model.Transformer;
+import com.equilibrium.transformerapi.model.TransformerBattleResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,9 @@ public interface TransformerService {
 
     Transformer getTransformerById(long transformerId);
 
+    List<Transformer> findByIdList(ArrayList<Long> idList);
+
     void deleteTransformer(long id);
 
-    void battle(ArrayList<Long> idList);
-
+    TransformerBattleResult battle(ArrayList<Long> idList);
 }

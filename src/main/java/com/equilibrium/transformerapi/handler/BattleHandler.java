@@ -4,6 +4,7 @@ import com.equilibrium.transformerapi.model.Transformer;
 
 public class BattleHandler {
 
+    // This method returns the one on one battle result based on the rules defined
     public static String oneOnOneBattle(Transformer autobot, Transformer decepticon){
 
         if (autobot.getName().equals("Optimus Prime") && decepticon.getName().equals("Predaking"))
