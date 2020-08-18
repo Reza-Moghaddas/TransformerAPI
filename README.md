@@ -13,18 +13,18 @@ To test the methods you also can use the tools like SwaggerUI or Postman.
 
 Build:
 
-./mvnw clean install
+ ./mvnw clean install
 
 Build & JAR package:
 
-./mvnw clean package
+ ./mvnw clean package
 
 # How to Run the App:
 After clean build and JAR packaging, You can go to the /target folder and check if the JAR file is created. You can run the JAR file, as follows:
 
-java -jar target/transformerapi-0.0.1-SNAPSHOT.jar
+ java -jar target/transformerapi-0.0.1-SNAPSHOT.jar
 
-
+Now that the service is up, visit http://localhost:8080/transformers
 
 
 
