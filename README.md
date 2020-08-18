@@ -12,9 +12,11 @@ To test the methods you also can use the tools like SwaggerUI or Postman.
 # How To Build and create JAR package
 
 Build:
+
 ./mvnw clean install
 
-Build & JAR package
+Build & JAR package:
+
 ./mvnw clean package
 
 # How to Run the App:
